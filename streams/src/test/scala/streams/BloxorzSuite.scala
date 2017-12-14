@@ -40,6 +40,7 @@ class BloxorzSuite extends FunSuite {
       |------ooo-""".stripMargin
 
     val optsolution = List(Right, Right, Down, Right, Right, Right, Down)
+
   }
 
 
@@ -55,6 +56,26 @@ class BloxorzSuite extends FunSuite {
       assert(!terrain(Pos(4,11)), "4,11")
       assert(!terrain(Pos(-1,0)), "-1,0")
       assert(!terrain(Pos(0,-1)), "0,-1")
+    }
+  }
+
+  test("neighbors computation") {
+    new Level1 {
+      val candidates = Set(
+        (Block(Pos(1,2),Pos(1,3)), List(Right,Left,Up)),
+        (Block(Pos(2,1),Pos(3,1)), List(Down,Left,Up))
+      )
+
+      val allNeighbors = neighborsWithHistory(Block(Pos(1,1),Pos(1,1)), List(Left,Up))
+      assert( allNeighbors.toSet == candidates )
+
+      val newNeighbors = newNeighborsOnly(
+        candidates.toStream,
+        Set(Block(Pos(1,2),Pos(1,3)), Block(Pos(1,1),Pos(1,1)))
+      )
+      assert( newNeighbors.toSet == Set(
+        (Block(Pos(2,1),Pos(3,1)), List(Down,Left,Up))
+      ) )
     }
   }
 
